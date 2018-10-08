@@ -302,7 +302,7 @@ class VGG(object):
         #loss = cost + reg_cost
         trainin_op = tf.train.AdamOptimizer(self.lr).minimize(cost) # current best 0.0001
 
-        epoch = 9 # default = 13
+        epoch = 13 # default = 13
         n_batches = N // self.batch_size
         init = tf.global_variables_initializer()
         val_loss_list = []

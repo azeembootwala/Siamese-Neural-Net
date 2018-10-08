@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #SBATCH --job-name=train_contrastive
 #SBATCH --ntasks=1
