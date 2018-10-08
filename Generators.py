@@ -43,7 +43,6 @@ class Generators(object):
             j+=1
 
     def valdatagen(self, balanced=False):
-        P = PreProcess()
         dev_dir = "/cluster/azeem/Data/preprocessed_devset/Images/"
         image_list = os.listdir(dev_dir)
         if balanced:
@@ -128,13 +127,6 @@ def main():
     count = 0
     for i in range(2):
         X, Y, Name = next(train_gen)
-
-
-
-
-
-
-
 
 
 
