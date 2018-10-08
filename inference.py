@@ -7,7 +7,7 @@ np.set_printoptions(threshold=np.nan)
 
 def infer_generator(session , model_path):
     batch_size = 16
-    test_list = os.listdir("../Data/preprocessed_devset/Images")
+    test_list = os.listdir("/cluster/azeem/Data/preprocessed_devset/Images/")
     N = len(test_list)
     n_batches = N // batch_size
     valgen = Generators(batch_size).valdatagen()
