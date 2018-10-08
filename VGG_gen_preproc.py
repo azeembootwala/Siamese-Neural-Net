@@ -290,7 +290,7 @@ class VGG(object):
         ####  We now have the normalized embeddings , we will now pair them against each other to create B*(B-1)
         #### combinations where B is the batch size.
         #reg = 5e-3  # Regularization parameter
-        margin = 0.6 # default 0.4
+        margin = 1.0 # default 0.4
         margin_upper = 0.7
         margin_lower = 0.1
         anchor_left , anchor_right= Contrastive(self.batch_size).pair_combos(embedding)
@@ -363,7 +363,7 @@ class VGG(object):
 def main():
     type ="Full" # type "Full / Reduced"
     batch_size=16
-    path = "../Models/VGG-experiment2"
+    path = "../Models/VGG-experiment3"
     Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path)
     traingen = Generators(batch_size=batch_size).traindatagen()
     valgen = Generators(batch_size=batch_size).valdatagen()
