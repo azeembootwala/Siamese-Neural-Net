@@ -290,7 +290,7 @@ class VGG(object):
         ####  We now have the normalized embeddings , we will now pair them against each other to create B*(B-1)
         #### combinations where B is the batch size.
         #reg = 5e-3  # Regularization parameter
-        margin = 1.1 # default 0.4
+        margin = 0.6 # default 0.4
         margin_upper = 0.7
         margin_lower = 0.1
         anchor_left , anchor_right= Contrastive(self.batch_size).pair_combos(embedding)
