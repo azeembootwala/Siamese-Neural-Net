@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=12000
 #SBATCH --gres=gpu:1
-#SBATCH -o /home/yl40isat/code/output.out
-#SBATCH -e /home/yl40isat/code/error.err
+#SBATCH -o /home/%u/output-%j.out
+#SBATCH -e /home/%u/code/error-%j.err
 #SBATCH --mail-type=ALL
 
 # Small Python packages can be installed in own home directory. Not recommended$
