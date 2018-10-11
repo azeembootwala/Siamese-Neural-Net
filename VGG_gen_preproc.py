@@ -361,8 +361,8 @@ class VGG(object):
 
 def main():
     batch_size=16
-    margin = 0.3 # default 0.4
-    path = "../Models/VGG-experiment4"
+    margin = 1.0 # default 0.4
+    path = "../Models/VGG-experiment3"
     Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path)
     traingen = Generators(batch_size=batch_size).traindatagen()
     valgen = Generators(batch_size=batch_size).valdatagen()
