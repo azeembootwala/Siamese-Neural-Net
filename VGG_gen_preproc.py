@@ -197,7 +197,7 @@ class VGG(object):
         plt.legend()
         fig6.savefig(os.path.join(self.path+"/"+str(folder),"Plots")+"/MRR-non_healthy_"+str(folder), transparent=False,bbox_inches = "tight" ,pad_inches=0)
 
-    def make_plots(self,session,folder, lr ):
+    def make_plots(self,session,folder, lr , margin):
         infer_generator(session,self.path+"/"+str(folder)+"/"+str(folder))
         E = evaluate(self.path+"/"+str(folder), 10)
         MRR = E.MRR()
@@ -222,7 +222,7 @@ class VGG(object):
         plt.close("all")
 
         with open(self.path+"/"+str(folder)+"/log_"+str(folder)+".txt","w") as f:
-            print(" With learning rate of: "+str(lr) +" On Test dataset we achieved an Overall Mean Average Precission of: "+ str(MAP) , file = f)
+            print(" With learning rate of: "+str(lr)+" & margin of "+str(margin)+"On Test dataset we achieved an Overall Mean Average Precission of: "+ str(MAP) , file = f)
             print(" With learning rate of: "+str(lr) + ' On Test dataset we achieved an Overall Mean Reciprocal Rank of: ' + str(MRR), file=f)
             print("MAP & MRR for Healthy class is: "+str(MAP_per_class[0])+" & "+str(MRR_per_class[0]),file=f)
             print("MAP & MRR for Mild class is: "+str(MAP_per_class[1])+" & "+str(MRR_per_class[1]),file=f)
@@ -233,7 +233,7 @@ class VGG(object):
             f.close()
 
 
-    def fit(self, traingen, valgen, type):
+    def fit(self, traingen, valgen, margin):
         N = len(os.listdir("/cluster/azeem/Data/preprocessed_trainset/Images/"))
         self.im_width = 400
 
@@ -290,7 +290,6 @@ class VGG(object):
         ####  We now have the normalized embeddings , we will now pair them against each other to create B*(B-1)
         #### combinations where B is the batch size.
         #reg = 5e-3  # Regularization parameter
-        margin = 0.3 # default 0.4
         margin_upper = 0.7
         margin_lower = 0.1
         anchor_left , anchor_right= Contrastive(self.batch_size).pair_combos(embedding)
@@ -323,7 +322,7 @@ class VGG(object):
                     os.makedirs(os.path.join(self.path+"/"+str(j),"Plots"))
                 fig.savefig(os.path.join(self.path+"/"+str(j),"Plots")+"/vgg_train_"+str(j), transparent=False,bbox_inches = "tight" ,pad_inches=0)
                 saver.save(self.session,self.path+"/"+str(j)+"/"+str(j))
-                self.make_plots(self.session,j, self.lr)
+                self.make_plots(self.session,j, self.lr, margin)
             for i in range(n_batches):
                 X, Y, name = next(traingen)
                 self.session.run(trainin_op, feed_dict={tfX:X, tfY:Y})
@@ -361,13 +360,13 @@ class VGG(object):
 
 
 def main():
-    type ="Full" # type "Full / Reduced"
     batch_size=16
+    margin = 0.3 # default 0.4
     path = "../Models/VGG-experiment4"
     Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path)
     traingen = Generators(batch_size=batch_size).traindatagen()
     valgen = Generators(batch_size=batch_size).valdatagen()
-    Model.fit(traingen, valgen,type)
+    Model.fit(traingen, valgen,margin)
 
 
 if __name__ == "__main__":

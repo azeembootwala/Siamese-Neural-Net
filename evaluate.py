@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 np.set_printoptions(threshold=np.nan)
 import cv2
 import copy
+from sklearn.utils import shuffle
 
 
 class evaluate(object):
@@ -77,21 +78,42 @@ class evaluate(object):
         Ytest = []
         names_list = []
         idx = np.array([x for x in range(self.Ytest.shape[0])])
-        Healthy = idx[[(lambda i:x==0)(x) for i , x in enumerate(self.Ytest)]]
-        Mild = idx[[(lambda i:x==1)(x) for i , x in enumerate(self.Ytest)]]
-        Moderate=idx[[(lambda i:x==2)(x) for i , x in enumerate(self.Ytest)]]
-        Severe=idx[[(lambda i:x==3)(x) for i , x in enumerate(self.Ytest)]]
-        Proliferative=idx[[(lambda i:x==4)(x) for i , x in enumerate(self.Ytest)]]
+        Healthy = shuffle(idx[[(lambda i:x==0)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
+        Mild = shuffle(idx[[(lambda i:x==1)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
+        Moderate=shuffle(idx[[(lambda i:x==2)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
+        Severe=shuffle(idx[[(lambda i:x==3)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
+        Proliferative=shuffle(idx[[(lambda i:x==4)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
         class_index_list = [Healthy , Mild , Moderate , Severe , Proliferative]
-
         for i in range(len(classes)):
-            count = 0
-            while count<=min_no:
-                index = np.random.choice(class_index_list[i])
+            for index in class_index_list[i]:
                 embedding.append(self.embedding[index,:])
                 Ytest.append(self.Ytest[index])
                 names_list.append(self.names_list[index])
-                count+=1
+        self.embedding = np.array(embedding)
+        self.Ytest = np.array(Ytest)
+        self.names_list = np.array(names_list)
+
+    def healthy_disease_balance(self):
+        classes = self.classes
+        class_no = []
+        for i in range(len(classes)):
+            class_no.append(len(self.Ytest[self.Ytest==i]))
+        min_no = min(class_no)
+        embedding = []
+        Ytest = []
+        names_list = []
+        idx = np.array([x for x in range(self.Ytest.shape[0])])
+        Healthy = shuffle(idx[[(lambda i:x==0)(x) for i , x in enumerate(self.Ytest)]])[:min_no*4]
+        Mild = shuffle(idx[[(lambda i:x==1)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
+        Moderate=shuffle(idx[[(lambda i:x==2)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
+        Severe=shuffle(idx[[(lambda i:x==3)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
+        Proliferative=shuffle(idx[[(lambda i:x==4)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
+        class_index_list = [Healthy , Mild , Moderate , Severe , Proliferative]
+        for i in range(len(classes)):
+            for index in class_index_list[i]:
+                embedding.append(self.embedding[index,:])
+                Ytest.append(self.Ytest[index])
+                names_list.append(self.names_list[index])
         self.embedding = np.array(embedding)
         self.Ytest = np.array(Ytest)
         self.names_list = np.array(names_list)
@@ -152,7 +174,7 @@ class evaluate(object):
         return top_k_indices, top_k_distances
 
     def manual_check(self,query_index):
-        image_path = "../Data/preprocessed_devset/Images"
+        image_path = "/media/azeem/Seagate Expansion Drive2/src/Data/preprocessed_devset/Images"
         query_image = cv2.imread(image_path+"/"+self.names_list[query_index])
         cv2.imshow("query_image :- " + str(self.classes[self.Ytest[query_index]]),query_image)
         cv2.waitKey(0)
@@ -314,64 +336,14 @@ class evaluate(object):
         kappa = (observed_agreement - random_agreement)/(1.0-random_agreement)
         return kappa
 
-    def healthy_disease_balance(self):
-        classes = self.classes
-        class_no = []
-        for i in range(len(classes)):
-            class_no.append(len(self.Ytest[self.Ytest==i]))
-        min_no = min(class_no)
-        embedding = []
-        Ytest = []
-        names_list = []
-        count0 = 0
-        count1 = 0
-        count2 = 0
-        count3 = 0
-        count4 = 0
-        for index, label in enumerate(self.Ytest):
-            if label==0:
-                if count0<min_no*4:
-                    count0+=1
-                    embedding.append(self.embedding[index,:])
-                    Ytest.append(self.Ytest[index])
-                    names_list.append(self.names_list[index])
-            if label==1:
-                if count1<min_no:
-                    count1+=1
-                    embedding.append(self.embedding[index,:])
-                    Ytest.append(self.Ytest[index])
-                    names_list.append(self.names_list[index])
-            if label==2:
-                if count2<min_no:
-                    count2+=1
-                    embedding.append(self.embedding[index,:])
-                    Ytest.append(self.Ytest[index])
-                    names_list.append(self.names_list[index])
-            if label==3:
-                if count3<min_no:
-                    count3+=1
-                    embedding.append(self.embedding[index,:])
-                    Ytest.append(self.Ytest[index])
-                    names_list.append(self.names_list[index])
-            if label==4:
-                if count4<min_no:
-                    count4+=1
-                    embedding.append(self.embedding[index,:])
-                    Ytest.append(self.Ytest[index])
-                    names_list.append(self.names_list[index])
-        self.embedding = np.array(embedding)
-        self.Ytest = np.array(Ytest)
-        self.names_list = np.array(names_list)
-
-
 
 if __name__=="__main__":
     #path = "../Resnet/Models/Resnet50-128_longer/50"
     #path = "./Models/improved_margin/12"
     #path = "./Models/VGG-reduced10"
     #path = "./Models/VGG16-plain"
-    #path = "./Models/VGG-exp/12"
-    path = "./Models/VGG-balanced/6"
+    path = "./Models/VGG-margin0.4/8" # best till now
+    #path = "./Models/VGG-balanced/6"
     #path = "./Models/VGG-cross_entropy/8"
     labels = np.load(os.path.join(path,"class_index.npy"))
     labels = labels.astype(np.int64)
@@ -380,8 +352,8 @@ if __name__=="__main__":
     E = evaluate(path, K)
 
     #E.balanced_classes()
-    E.balanced_classes_random()
-    #E.healthy_disease_balance()
+    #E.balanced_classes_random()
+    E.healthy_disease_balance()
     labels = E.Ytest
     ### Additions end
     idx = np.array([x for x in range(labels.shape[0])])
@@ -419,6 +391,6 @@ if __name__=="__main__":
     MP_healthy,TP,TP_FN = E.referable_non_referable(0)
     MP_non_healthy , TN , TN_FP = E.referable_non_referable(1)
     kappa = E.cohens_kappa(TP,TP_FN , TN , TN_FP)
-    print("Mean Precision for Non-Referable Diabetic Retinopathy: ", MP_healthy)
-    print("Mean Precision for Referable Diabetic Retinopathy: ", MP_non_healthy)
+    print("Mean Precision for Non-Referable Diabetic Retinopathy (Sensitivity): ", MP_healthy)
+    print("Mean Precision for Referable Diabetic Retinopathy:(Specificity)", MP_non_healthy)
     print("The Cohens Kappa Value is: ", kappa)
