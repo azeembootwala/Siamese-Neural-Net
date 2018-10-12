@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=train_contrastive
+#SBATCH --job-name=0.3_contrastive
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=12000
