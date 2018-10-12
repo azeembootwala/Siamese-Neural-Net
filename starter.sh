@@ -5,7 +5,7 @@
 #SBATCH --mem=12000
 #SBATCH --gres=gpu:1
 #SBATCH -o /home/%u/output-%j.out
-#SBATCH -e /home/%u/code/error-%j.err
+#SBATCH -e /home/%u/error-%j.err
 #SBATCH --mail-type=ALL
 
 # Small Python packages can be installed in own home directory. Not recommended$
