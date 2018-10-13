@@ -89,7 +89,7 @@ class VGG(object):
         self.conv3layer = conv3layer
         self.Initializer = Initializer
         self.batch_size = batch_size
-        self.lr = 1e-4 #  best till now 1e-6 for batch hard and 1e-5 for Batch all
+        self.lr = 1e-6 #  best till now 1e-6 for batch hard and 1e-5 for Batch all
         self.conv_obj = []
         self.FC_obj = []
         self.overall_MRR = []
