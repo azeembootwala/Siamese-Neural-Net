@@ -12,4 +12,4 @@
 # cluster_requirements.txt is a text file listing the required pip packages (on$
 #pip3 install --user -r cluster_requirements.txty
 
-python3 VGG-contrastive.py
+python3 VGG-triplet.py
