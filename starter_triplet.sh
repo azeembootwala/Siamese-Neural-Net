@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=triplet
+#SBATCH --job-name=64-triplet
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=12000
