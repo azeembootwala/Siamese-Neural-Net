@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=64-triplet
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=12000
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=24000
 #SBATCH --gres=gpu:1
 #SBATCH -o /home/%u/output-%j.out
 #SBATCH -e /home/%u/error-%j.err
