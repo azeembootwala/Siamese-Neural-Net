@@ -159,7 +159,7 @@ class VGG(object):
         plt.legend()
         fig6.savefig(os.path.join(self.path+"/"+str(folder),"Plots")+"/MRR-non_healthy_"+str(folder), transparent=False,bbox_inches = "tight" ,pad_inches=0)
 
-    def make_plots(self,session,folder, lr ):
+    def make_plots(self,session,folder, lr , margin):
         infer_generator(session,self.path+"/"+str(folder)+"/"+str(folder))
         E = evaluate(self.path+"/"+str(folder), 10)
         MRR = E.MRR()
