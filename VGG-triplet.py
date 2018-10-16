@@ -89,7 +89,7 @@ class VGG(object):
         self.conv3layer = conv3layer
         self.Initializer = Initializer
         self.batch_size = batch_size
-        self.lr = 1e-6 #  best till now 1e-6 for batch hard and 1e-5 for Batch all
+        self.lr = 1e-4 #  best till now 1e-6 for batch hard and 1e-5 for Batch all
         self.conv_obj = []
         self.FC_obj = []
         self.overall_MRR = []
@@ -184,7 +184,7 @@ class VGG(object):
         plt.close("all")
 
         with open(self.path+"/"+str(folder)+"/log_"+str(folder)+".txt","w") as f:
-            print(" With learning rate of: "+str(lr) +" On Test dataset we achieved an Overall Mean Average Precission of: "+ str(MAP) , file = f)
+            print(" With learning rate of: "+str(lr) +" margin of " + str(margin) " On Test dataset we achieved an Overall Mean Average Precision of: "+ str(MAP) , file = f)
             print(" With learning rate of: "+str(lr) + ' On Test dataset we achieved an Overall Mean Reciprocal Rank of: ' + str(MRR), file=f)
             print("MAP & MRR for Healthy class is: "+str(MAP_per_class[0])+" & "+str(MRR_per_class[0]),file=f)
             print("MAP & MRR for Mild class is: "+str(MAP_per_class[1])+" & "+str(MRR_per_class[1]),file=f)
@@ -283,7 +283,7 @@ class VGG(object):
                 fig1.savefig(os.path.join(self.path+"/"+str(j),"Plots")+"/vgg_train_"+str(j), transparent=False,bbox_inches = "tight" ,pad_inches=0)
                 fig2.savefig(os.path.join(self.path+"/"+str(j),"Plots")+"/fraction_vgg_train_"+str(j), transparent=False,bbox_inches = "tight" ,pad_inches=0)
                 saver.save(self.session,self.path+"/"+str(j)+"/"+str(j))
-                self.make_plots(self.session,j, self.lr)
+                self.make_plots(self.session,j, self.lr, margin)
             for i in range(n_batches):
                 X, Y, name = next(traingen)
                 self.session.run(training_op ,feed_dict={tfX:X,tfY:Y})
@@ -328,8 +328,8 @@ class VGG(object):
 
 def main():
     batch_size=16
-    margin = 0.4
-    path = "./Triplet-Models/Batch_all_0.4_e-6"
+    margin = 0.5
+    path = "./Triplet-Models/Batch_all_0.4_e-4"
     Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path)
     traingen = Generators(batch_size=batch_size).traindatagen()
     valgen = Generators(batch_size=batch_size).valdatagen()

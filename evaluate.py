@@ -342,7 +342,8 @@ if __name__=="__main__":
     #path = "./Models/improved_margin/12"
     #path = "./Models/VGG-reduced10"
     #path = "./Models/VGG16-plain"
-    path = "./Models/VGG-margin0.4/8" # best till now
+    #path = "./Models/VGG-margin0.4/8" # best till now
+    path = "./Models/VGG-margin0.6/12"
     #path = "./Models/VGG-balanced/6"
     #path = "./Models/VGG-cross_entropy/8"
     labels = np.load(os.path.join(path,"class_index.npy"))
@@ -351,13 +352,14 @@ if __name__=="__main__":
     K= 10
     E = evaluate(path, K)
 
-    #E.balanced_classes()
+    E.balanced_classes()
     #E.balanced_classes_random()
-    E.healthy_disease_balance()
+    #E.healthy_disease_balance()
     labels = E.Ytest
     ### Additions end
     idx = np.array([x for x in range(labels.shape[0])])
     Healthy = idx[[(lambda i:x==0)(x) for i , x in enumerate(labels)]]
+
     Mild = idx[[(lambda i:x==1)(x) for i , x in enumerate(labels)]]
     Moderate=idx[[(lambda i:x==2)(x) for i , x in enumerate(labels)]]
     Severe=idx[[(lambda i:x==3)(x) for i , x in enumerate(labels)]]
@@ -370,7 +372,7 @@ if __name__=="__main__":
     #print(no)
     #E.manual_check(no)
 
-    MAP, MP = E.MAP()
+    MAP, MP = E.MAP() # funct 1
     print("Overall MAP achieved is: ",MAP)
     print("Ovearall MRR achieved is: ",E.MRR())
     MAP_per_class , MRR_per_class , MP_per_class = E.per_class_stats()
@@ -379,7 +381,7 @@ if __name__=="__main__":
     print("MAP & MRR for Moderate class is: "+str(MAP_per_class[2])+" & "+str(MRR_per_class[2]))
     print("MAP & MRR for Severe class is: "+str(MAP_per_class[3])+" & "+str(MRR_per_class[3]))
     print("MAP & MRR for Proliferative class is: "+str(MAP_per_class[4])+" & "+str(MRR_per_class[4]))
-    MAP_non , MP_non = E.MAP_non_healthy()
+    MAP_non , MP_non = E.MAP_non_healthy() # funct 2
     print("MAP & MRR for NON-Healthy class is: "+ str(MAP_non) +" & "+str(E.MRR_non_healthy()))
     print("Overall Mean precision is ", MP)
     print("MP for Healthy class is: "+ str(MP_per_class[0]))
@@ -388,9 +390,9 @@ if __name__=="__main__":
     print("MP for Severe class is: " + str(MP_per_class[3]))
     print("MP for Proliferative class is:" + str(MP_per_class[4]))
     print("Mean Precision for NON-Healthy class is including Mild: ", MP_non)
-    MP_healthy,TP,TP_FN = E.referable_non_referable(0)
-    MP_non_healthy , TN , TN_FP = E.referable_non_referable(1)
-    kappa = E.cohens_kappa(TP,TP_FN , TN , TN_FP)
+    MP_healthy,TP,TP_FN = E.referable_non_referable(0) # funct 3
+    MP_non_healthy , TN , TN_FP = E.referable_non_referable(1) # funt 4
+    kappa = E.cohens_kappa(TP,TP_FN , TN , TN_FP) # funct 5
     print("Mean Precision for Non-Referable Diabetic Retinopathy (Sensitivity): ", MP_healthy)
     print("Mean Precision for Referable Diabetic Retinopathy:(Specificity)", MP_non_healthy)
     print("The Cohens Kappa Value is: ", kappa)
