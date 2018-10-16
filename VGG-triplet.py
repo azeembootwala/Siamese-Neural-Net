@@ -184,7 +184,7 @@ class VGG(object):
         plt.close("all")
 
         with open(self.path+"/"+str(folder)+"/log_"+str(folder)+".txt","w") as f:
-            print(" With learning rate of: "+str(lr) +" margin of " + str(margin) " On Test dataset we achieved an Overall Mean Average Precision of: "+ str(MAP) , file = f)
+            print(" With learning rate of: "+str(lr) +" margin of " + str(margin)+ " On Test dataset we achieved an Overall Mean Average Precision of: "+ str(MAP) , file = f)
             print(" With learning rate of: "+str(lr) + ' On Test dataset we achieved an Overall Mean Reciprocal Rank of: ' + str(MRR), file=f)
             print("MAP & MRR for Healthy class is: "+str(MAP_per_class[0])+" & "+str(MRR_per_class[0]),file=f)
             print("MAP & MRR for Mild class is: "+str(MAP_per_class[1])+" & "+str(MRR_per_class[1]),file=f)
