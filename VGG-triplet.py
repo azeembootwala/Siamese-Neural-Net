@@ -328,8 +328,8 @@ class VGG(object):
 
 def main():
     batch_size=16
-    margin = 0.5
-    path = "./Triplet-Models/Batch_all_0.5_e-4"
+    margin = 0.6
+    path = "./Triplet-Models/Batch_all_0.6_e-4"
     Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path)
     traingen = Generators(batch_size=batch_size).traindatagen()
     valgen = Generators(batch_size=batch_size).valdatagen()
