@@ -83,13 +83,13 @@ class FCLayer(object):
 
 
 class VGG(object):
-    def __init__(self, conv2layer, conv3layer, Initializer, batch_size, path):
+    def __init__(self, conv2layer, conv3layer, Initializer, batch_size, path, lr):
         self.path = path
         self.conv2layer = conv2layer
         self.conv3layer = conv3layer
         self.Initializer = Initializer
         self.batch_size = batch_size
-        self.lr = 1e-4 #  best till now 1e-6 for batch hard and 1e-5 for Batch all
+        self.lr = lr #  best till now 1e-6 for batch hard and 1e-4 for Batch all
         self.conv_obj = []
         self.FC_obj = []
         self.overall_MRR = []
@@ -159,7 +159,7 @@ class VGG(object):
         plt.legend()
         fig6.savefig(os.path.join(self.path+"/"+str(folder),"Plots")+"/MRR-non_healthy_"+str(folder), transparent=False,bbox_inches = "tight" ,pad_inches=0)
 
-    def make_plots(self,session,folder, lr , margin):
+    def make_plots(self,session,folder, lr, margin):
         infer_generator(session,self.path+"/"+str(folder)+"/"+str(folder))
         E = evaluate(self.path+"/"+str(folder), 10)
         MRR = E.MRR()
@@ -184,7 +184,7 @@ class VGG(object):
         plt.close("all")
 
         with open(self.path+"/"+str(folder)+"/log_"+str(folder)+".txt","w") as f:
-            print(" With learning rate of: "+str(lr) +" margin of " + str(margin)+ " On Test dataset we achieved an Overall Mean Average Precision of: "+ str(MAP) , file = f)
+            print(" With learning rate of: "+str(lr) +" & margin of "+str(margin)+" On Test dataset we achieved an Overall Mean Average Precission of: "+ str(MAP) , file = f)
             print(" With learning rate of: "+str(lr) + ' On Test dataset we achieved an Overall Mean Reciprocal Rank of: ' + str(MRR), file=f)
             print("MAP & MRR for Healthy class is: "+str(MAP_per_class[0])+" & "+str(MRR_per_class[0]),file=f)
             print("MAP & MRR for Mild class is: "+str(MAP_per_class[1])+" & "+str(MRR_per_class[1]),file=f)
@@ -327,10 +327,11 @@ class VGG(object):
 
 
 def main():
+    lr = 1e-4
+    margin = 0.5
     batch_size=16
-    margin = 0.6
-    path = "./Triplet-Models/Batch_all_0.6_e-4"
-    Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path)
+    path = "../Triplet-Models/Batch_all-"+str(margin)+"_"+str(lr)
+    Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path,lr)
     traingen = Generators(batch_size=batch_size).traindatagen()
     valgen = Generators(batch_size=batch_size).valdatagen()
     Model.fit(traingen, valgen, margin)

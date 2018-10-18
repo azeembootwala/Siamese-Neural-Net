@@ -174,7 +174,7 @@ class evaluate(object):
         return top_k_indices, top_k_distances
 
     def manual_check(self,query_index):
-        image_path = "/media/azeem/Seagate Expansion Drive2/src/Data/preprocessed_devset/Images"
+        image_path = "/media/azeem/Seagate Expansion Drive3/src/Data/preprocessed_devset/Images"
         query_image = cv2.imread(image_path+"/"+self.names_list[query_index])
         cv2.imshow("query_image :- " + str(self.classes[self.Ytest[query_index]]),query_image)
         cv2.waitKey(0)
@@ -342,18 +342,18 @@ if __name__=="__main__":
     #path = "./Models/improved_margin/12"
     #path = "./Models/VGG-reduced10"
     #path = "./Models/VGG16-plain"
-    #path = "./Models/VGG-margin0.4/8" # best till now
-    path = "./Models/VGG-margin0.6/12"
+    path = "./Models/VGG-margin0.4/8" # best till now
+    #path = "./Models/VGG-margin0.6/12"
     #path = "./Models/VGG-balanced/6"
     #path = "./Models/VGG-cross_entropy/8"
     labels = np.load(os.path.join(path,"class_index.npy"))
     labels = labels.astype(np.int64)
     #### Additions
-    K= 10
+    K= 6
     E = evaluate(path, K)
 
-    E.balanced_classes()
-    #E.balanced_classes_random()
+    #E.balanced_classes()
+    E.balanced_classes_random()
     #E.healthy_disease_balance()
     labels = E.Ytest
     ### Additions end
@@ -370,8 +370,8 @@ if __name__=="__main__":
     no = np.random.choice(class_list[class_picker])
 
     #print(no)
-    #E.manual_check(no)
-
+    E.manual_check(no)
+    """
     MAP, MP = E.MAP() # funct 1
     print("Overall MAP achieved is: ",MAP)
     print("Ovearall MRR achieved is: ",E.MRR())
@@ -396,3 +396,4 @@ if __name__=="__main__":
     print("Mean Precision for Non-Referable Diabetic Retinopathy (Sensitivity): ", MP_healthy)
     print("Mean Precision for Referable Diabetic Retinopathy:(Specificity)", MP_non_healthy)
     print("The Cohens Kappa Value is: ", kappa)
+    """
