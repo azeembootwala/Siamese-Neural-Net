@@ -251,7 +251,7 @@ class VGG(object):
         #training_op = tf.train.AdagradOptimizer(self.lr).minimize(cost)
         #training_op = tf.train.RMSPropOptimizer(self.lr).minimize(cost)
 
-        epoch = 15 # default = 13
+        epoch = 21 # default = 13
         n_batches = N // self.batch_size
         init = tf.global_variables_initializer()
         val_loss_list = []
@@ -327,8 +327,8 @@ class VGG(object):
 
 
 def main():
-    lr = 1e-4
-    margin = 0.5
+    lr = 1e-5
+    margin = 0.6
     batch_size=16
     path = "../Triplet-Models/Batch_all-"+str(margin)+"_"+str(lr)
     Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path,lr)
