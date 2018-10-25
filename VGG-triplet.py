@@ -327,8 +327,8 @@ class VGG(object):
 
 
 def main():
-    lr = 1e-5
-    margin = 0.6
+    lr = 1e-4
+    margin = 0.2
     batch_size=16
     path = "../Triplet-Models/Batch_all-"+str(margin)+"_"+str(lr)
     Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path,lr)
