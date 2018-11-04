@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from util_vgg import Normal , Xavier
-from Contrastive_loss import Contrastive  #pairwise_distances , get_binaray_labels , contrastive_loss , pair_combos, contrastive_loss_v1
+from histogram_loss import histogram
 from Generators import Generators
 from inference import infer_generator
 from evaluate import evaluate
