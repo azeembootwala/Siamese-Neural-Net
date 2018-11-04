@@ -198,7 +198,7 @@ class VGG(object):
         plt.legend()
         fig6.savefig(os.path.join(self.path+"/"+str(folder),"Plots")+"/MRR-non_healthy_"+str(folder), transparent=False,bbox_inches = "tight" ,pad_inches=0)
 
-    def make_plots(self,session,folder, lr , margin):
+    def make_plots(self,session,folder, lr , bins):
         infer_generator(session,self.path+"/"+str(folder)+"/"+str(folder))
         E = evaluate(self.path+"/"+str(folder), 10)
         MRR = E.MRR()
@@ -223,7 +223,7 @@ class VGG(object):
         plt.close("all")
 
         with open(self.path+"/"+str(folder)+"/log_"+str(folder)+".txt","w") as f:
-            print(" With learning rate of: "+str(lr)+" & margin of "+str(margin)+" On Test dataset we achieved an Overall Mean Average Precission of: "+ str(MAP) , file = f)
+            print(" With learning rate of: "+str(lr)+" & bin size of "+str(bins)+" On Test dataset we achieved an Overall Mean Average Precision of: "+ str(MAP) , file = f)
             print(" With learning rate of: "+str(lr) + ' On Test dataset we achieved an Overall Mean Reciprocal Rank of: ' + str(MRR), file=f)
             print("MAP & MRR for Healthy class is: "+str(MAP_per_class[0])+" & "+str(MRR_per_class[0]),file=f)
             print("MAP & MRR for Mild class is: "+str(MAP_per_class[1])+" & "+str(MRR_per_class[1]),file=f)
@@ -314,7 +314,7 @@ class VGG(object):
                     os.makedirs(os.path.join(self.path+"/"+str(j),"Plots"))
                 fig.savefig(os.path.join(self.path+"/"+str(j),"Plots")+"/vgg_train_"+str(j), transparent=False,bbox_inches = "tight" ,pad_inches=0)
                 saver.save(self.session,self.path+"/"+str(j)+"/"+str(j))
-                self.make_plots(self.session,j, self.lr, margin)
+                self.make_plots(self.session,j, self.lr, num_steps)
             for i in range(n_batches):
                 X, Y, name = next(traingen)
                 self.session.run(trainin_op, feed_dict={tfX:X, tfY:Y})
