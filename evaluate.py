@@ -343,15 +343,17 @@ if __name__=="__main__":
     #path = "./Models/VGG-reduced10"
     #path = "./Models/VGG16-plain"
     #path = "./Models/VGG-margin0.4/8" # best till now
-    path = "/media/azeem/Seagate Expansion Drive3/src/Triplet-Models/Batch_all-0.5_0.0001_b/14" # Best in Triplet batch all till now
+    #path = "/media/azeem/Seagate Expansion Drive3/src/Triplet-Models/Batch_all-0.5_0.0001_b/14" # Best in Triplet batch all till now
     #path = "/media/azeem/Seagate Expansion Drive3/src/Triplet-Models/Batch_all_0.5_e-5/10"
     #path = "./Models/VGG-margin0.6/12"
     #path = "./Models/VGG-balanced/6"
     #path = "./Models/VGG-cross_entropy/8"
+    path = "/media/azeem/Seagate Expansion Drive3/src/Triplet-Models/Batch_all-0.2_0.0001/12_b"
+
     labels = np.load(os.path.join(path,"class_index.npy"))
     labels = labels.astype(np.int64)
     #### Additions
-    K= 6
+    K= 10
     E = evaluate(path, K)
     #E.balanced_classes()
     #E.balanced_classes_random()
@@ -371,8 +373,8 @@ if __name__=="__main__":
     no = np.random.choice(class_list[class_picker])
 
     #print(no)
-    E.manual_check(no)
-    """
+    #E.manual_check(no)
+
     MAP, MP = E.MAP() # funct 1
     print("Overall MAP achieved is: ",MAP)
     print("Ovearall MRR achieved is: ",E.MRR())
@@ -397,4 +399,3 @@ if __name__=="__main__":
     print("Mean Precision for Non-Referable Diabetic Retinopathy (Sensitivity): ", MP_healthy)
     print("Mean Precision for Referable Diabetic Retinopathy:(Specificity)", MP_non_healthy)
     print("The Cohens Kappa Value is: ", kappa)
-    """

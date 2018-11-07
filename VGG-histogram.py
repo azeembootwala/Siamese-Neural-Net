@@ -352,7 +352,7 @@ class VGG(object):
 
 
 def main():
-    batch_size=16
+    batch_size=24
     num_steps = 150 # then 100 , 200 , 400
     lr = 1e-5
     path = "../Models-histogram/"+str(num_steps)+"_"+str(lr)
