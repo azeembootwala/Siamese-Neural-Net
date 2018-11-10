@@ -6,7 +6,7 @@ import os
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from util_vgg import Normal , Xavier , He
+from util_vgg import Normal , Xavier
 from Generators import Generators
 from histogram_loss import histogram
 from inference import infer_generator
