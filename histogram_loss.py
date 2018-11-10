@@ -1,17 +1,13 @@
 import numpy as np
 import tensorflow as tf
-import torch
+
 
 
 class histogram(object):
     def __init__(self, num_steps):
         self.num_steps = num_steps
         self.step = 2 / (self.num_steps-1)
-        torch_t = (torch.range(-1, 1, self.step).view(-1, 1)).numpy()
-        self.t = tf.convert_to_tensor(torch_t)
-        #self.t = self.my_tf_round(tf.reshape(tf.range(-1 , 1+self.step, self.step),[-1 ,1]))
-        #one = tf.constant(1.0,shape=[1,])
-        #self.t = tf.reshape(tf.concat([self.my_tf_round(tf.range(-1 , 1, self.step)), one], axis = 0),[-1,1])
+        self.t = self.my_tf_round(tf.reshape(tf.linspace(-1.0 , 1.0, num_steps),[-1 ,1]))
 
         self.tsize = tf.shape(self.t)[0]
 

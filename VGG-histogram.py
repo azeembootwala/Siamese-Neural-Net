@@ -6,45 +6,13 @@ import os
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from util_vgg import Normal , Xavier
-from histogram_loss import histogram
+from util_vgg import Normal , Xavier , He
 from Generators import Generators
+from histogram_loss import histogram
 from inference import infer_generator
 from evaluate import evaluate
-from keras.preprocessing.image import ImageDataGenerator
 from manifold_vizualization import tsne
 
-
-def make_pairs(embedding, labels , names):
-    output = []#np.zeros((embedding.shape[0]*(embedding.shape[0]-1),2,128))
-    lab =[]# np.zeros((labels.shape[0]*(labels.shape[0]-1),2))
-    distances = np.zeros((labels.shape[0]*(labels.shape[0]-1),1))
-    k = 0
-    # WE have to now convert Nx128 matrix into
-    iter = -1
-    for i in range(0, embedding.shape[0]):
-        left = embedding[i]
-        label_left = labels[i]
-        iter+=1
-        for j in range(iter,embedding.shape[0]):
-            if i==j:
-                pass
-            else:
-                right = embedding[j]
-                label_right = labels[j]
-                lab.append(1-np.int((label_left==label_right)))
-                output.append(np.linalg.norm(left-right))
-
-
-    return np.array(output), np.array(lab)
-
-    ### un-normalized values
-    """
-    They all work
-    diff = np.sqrt(np.sum(np.square(np.subtract(left,right))))
-    distances = np.linalg.norm(left-right) # diff between two vectors
-    ff = np.sqrt(left.dot(left) - 2*left.dot(right) + right.dot(right))
-    """
 
 class Conv2Layer(object):
     def __init__(self,mi1, mo1,mo2,Initializer,fw=3, fh=3 , pool_sz =(2,2)):
@@ -291,7 +259,7 @@ class VGG(object):
         ####  We now have the normalized embeddings , we will now pair them against each other to create B*(B-1)
         #### combinations where B is the batch size.
         cost = histogram(num_steps).hist_loss(embedding, tfY)
-        trainin_op = tf.train.AdamOptimizer(self.lr).minimize(cost) # current best 0.0001
+        trainin_op = tf.train.AdamOptimizer(self.lr).minimize(cost) # current best 0.00001
 
         epoch = 21 # default = 13
         n_batches = N // self.batch_size
@@ -324,14 +292,14 @@ class VGG(object):
                     loss_val  = self.session.run(cost,feed_dict={tfX:Xval,tfY:Yval})
                     LL_val+=loss_val
                     LL_train += loss_train
-                    #print(" Training loss at epoch %d of %d iteration %d of %d ,  is %.6f" %(j ,epoch-1,i,n_batches,loss_train))
+                    print(" Training loss at epoch %d of %d iteration %d of %d ,  is %.6f" %(j ,epoch-1,i,n_batches,loss_train))
                     print(" Validation loss at epoch %d of %d iteration %d of %d , is %.6f" %(j ,epoch-1,i,n_batches,loss_val))
 
             LL_val/=(n_batches//500) # change 100 to a number at which you want to keep the interval
             LL_train/=(n_batches//500) # change 100 to a number at which you want to keep the interval
             val_loss_list.append(LL_val)
             train_loss_list.append(LL_train)
-            #print("  At epoch %d of %d , average train_loss is %.6f" %(j ,epoch-1,LL_train))
+            print("  At epoch %d of %d , average train_loss is %.6f" %(j ,epoch-1,LL_train))
             print("  At epoch %d of %d , average val_loss is %.6f" %(j ,epoch-1,LL_val))
         self.session.close()
 
@@ -354,8 +322,8 @@ class VGG(object):
 def main():
     batch_size=24
     num_steps = 150 # then 100 , 200 , 400
-    lr = 1e-4
-    path = "../Models-histogram/"+str(num_steps)+"_"+str(lr)
+    lr = 1e-5
+    path = "../Histogram-Models/"+str(num_steps)+"_"+str(lr)
     Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path, lr )
     traingen = Generators(batch_size=batch_size).traindatagen()
     valgen = Generators(batch_size=batch_size).valdatagen()
