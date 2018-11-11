@@ -103,7 +103,7 @@ class evaluate(object):
         Ytest = []
         names_list = []
         idx = np.array([x for x in range(self.Ytest.shape[0])])
-        Healthy = shuffle(idx[[(lambda i:x==0)(x) for i , x in enumerate(self.Ytest)]])[:min_no*4]
+        Healthy = shuffle(idx[[(lambda i:x==0)(x) for i , x in enumerate(self.Ytest)]])[:min_no*2]
         Mild = shuffle(idx[[(lambda i:x==1)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
         Moderate=shuffle(idx[[(lambda i:x==2)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
         Severe=shuffle(idx[[(lambda i:x==3)(x) for i , x in enumerate(self.Ytest)]])[:min_no]
@@ -342,22 +342,22 @@ if __name__=="__main__":
     #path = "./Models/improved_margin/12"
     #path = "./Models/VGG-reduced10"
     #path = "./Models/VGG16-plain"
-    #path = "./Models/VGG-margin0.4/8" # best till now
+    path = "./Models/VGG-margin0.4/8" # best till now
     #path = "/media/azeem/Seagate Expansion Drive3/src/Triplet-Models/Batch_all-0.5_0.0001_b/14" # Best in Triplet batch all till now
     #path = "/media/azeem/Seagate Expansion Drive3/src/Triplet-Models/Batch_all_0.5_e-5/10"
     #path = "./Models/VGG-margin0.6/12"
     #path = "./Models/VGG-balanced/6"
     #path = "./Models/VGG-cross_entropy/8"
-    path = "/media/azeem/Seagate Expansion Drive3/src/Triplet-Models/Batch_all-0.2_0.0001/12_b"
+    #path = "/media/azeem/Seagate Expansion Drive3/src/Triplet-Models/Batch_all-0.2_0.0001/12_b"
 
     labels = np.load(os.path.join(path,"class_index.npy"))
     labels = labels.astype(np.int64)
     #### Additions
     K= 10
     E = evaluate(path, K)
-    #E.balanced_classes()
+    E.balanced_classes()
     #E.balanced_classes_random()
-    E.healthy_disease_balance()
+    #E.healthy_disease_balance()
     labels = E.Ytest
     ### Additions end
     idx = np.array([x for x in range(labels.shape[0])])
