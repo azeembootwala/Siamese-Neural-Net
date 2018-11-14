@@ -301,7 +301,7 @@ class VGG(object):
         #loss = cost + reg_cost
         trainin_op = tf.train.AdamOptimizer(self.lr).minimize(cost) # current best 0.0001
 
-        epoch = 13 # default = 13
+        epoch = 21 # default = 13
         n_batches = N // self.batch_size
         init = tf.global_variables_initializer()
         val_loss_list = []
@@ -360,9 +360,9 @@ class VGG(object):
 
 
 def main():
-    batch_size=16
-    margin = 0.3 # default 0.4
-    path = "../Models/VGG-experiment4"
+    batch_size=24
+    margin = 0.2 # default 0.4
+    path = "../Models/Contrastive-0.2"
     Model = VGG([(3,64,64),(64,128,128)],[(128,256,256,256),(256,512,512,512),(512,512,512,512)],Normal(), batch_size , path)
     traingen = Generators(batch_size=batch_size).traindatagen()
     valgen = Generators(batch_size=batch_size).valdatagen()
