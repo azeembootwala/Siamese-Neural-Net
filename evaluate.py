@@ -355,7 +355,7 @@ if __name__=="__main__":
     #### Additions
     K= 10
     E = evaluate(path, K)
-    E.balanced_classes()
+    #E.balanced_classes()
     #E.balanced_classes_random()
     #E.healthy_disease_balance()
     labels = E.Ytest
